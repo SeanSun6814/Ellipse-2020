@@ -84,13 +84,18 @@ public class TableColorDetector {
         }
 
         // let's check if it's the expected state
-        if (newState == expectedState || expectedState == TableColor.Other) {
+        if (newState == expectedState) {
+            System.out.println("INFO: Updated color from [" + state + "] to [" + newState + "]");
             state = newState;
             updateExpectedState();
             return true;
+        } else if (expectedState == TableColor.Other) {
+            System.out.println("INFO: Updated color from [" + state + "] to [" + newState + "]");
+            state = newState;
+            updateExpectedState();
+            return false;
         } else {
-            System.out.println(
-                    "WARNING: TableColorDetector skipped a state change from [" + state + "] to [" + newState + "]");
+            System.out.println("WARNING: Skipped color from [" + state + "] to [" + newState + "]");
             return false;
         }
 

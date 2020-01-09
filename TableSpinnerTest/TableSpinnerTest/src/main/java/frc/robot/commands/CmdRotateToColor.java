@@ -8,7 +8,7 @@ import frc.robot.subsystems.TableColorDetector.TableColor;
 
 public class CmdRotateToColor extends CommandBase {
 
-    public boolean isFinished = false;
+    public boolean isFinished;
 
     private TableSpinner tableSpinner = TableSpinner.getInstance();
 
@@ -24,6 +24,8 @@ public class CmdRotateToColor extends CommandBase {
 
     @Override
     public void initialize() {
+        isFinished = false;
+        prevStableEncoderVal = 0;
         System.out.println("CmdRotateToColor: INFO: starting");
 
         TableColor theirColor = getGameData();
@@ -36,14 +38,30 @@ public class CmdRotateToColor extends CommandBase {
         }
 
         TableColor currentColor = tableSpinner.peekCurrentColor();
+
+        if (wantedColor == currentColor) {
+            isFinished = true;
+            return;
+        }
+
         int displacement = getDisplacementToRotate(currentColor, wantedColor);
+
+        // displacement = 8;
+        System.out.println("CmdRotateToColor: TheirColor: " + theirColor);
+        System.out.println("CmdRotateToColor: WantedColor: " + wantedColor);
+        System.out.println("CmdRotateToColor: CurrentColor: " + currentColor);
+        System.out.println("CmdRotateToColor: displacement " + displacement + "edges");
+
         direction = getSign(displacement);
-        double degToSpinTable = displacement * 45 + 22.5; // spin to middle after arrived at color
+        double degToSpinTable = displacement * 45 + 15 * direction; // spin to middle after arrived at color
         degToSpinRoller = degToSpinTable * Const.kTableRot2RollerRot;
 
         tableSpinner.resetInitColorSensor(direction);
         tableSpinner.resetEncoder(0);
 
+        System.out.println("CmdRotateToColor: rotating " + degToSpinRoller + "deg");
+
+        tableSpinner.stopMotor();
         tableSpinner.setSetpoint(degToSpinRoller);
     }
 
@@ -52,13 +70,20 @@ public class CmdRotateToColor extends CommandBase {
         boolean edgeChanged = tableSpinner.getDeltaEdge();
         if (edgeChanged) {
             double deltaDegreesOnRoller = Const.kTableSliceRollerDeg * direction;
-
             prevStableEncoderVal += deltaDegreesOnRoller;
+            System.out.println("wrongEncoderVal: "
+                    + tableSpinner.motor.getSelectedSensorPosition() * Const.kTalonRaw2Rot * Const.kRot2Deg);
+            System.out.println("prevStableEncoderVal: " + prevStableEncoderVal);
             tableSpinner.resetEncoder(prevStableEncoderVal);
         }
 
-        if (Math.abs(degToSpinRoller - tableSpinner.getEncoderPosition()) < 90
-                && Math.abs(tableSpinner.getEncoderVelocity()) < 90) {
+        if (Math.abs(degToSpinRoller - tableSpinner.getEncoderPosition()) < 10
+                && Math.abs(tableSpinner.getEncoderVelocity()) < 5) {
+            System.out.println("CmdRotateToColor: met tolerance "
+                    + Math.abs(degToSpinRoller - tableSpinner.getEncoderPosition()) + "deg");
+            System.out.println(
+                    "CmdRotateToColor: met tolerance " + Math.abs(tableSpinner.getEncoderVelocity()) + "deg/s");
+
             // position error < 90deg
             // velocity < 90deg/s
             // tolerance met -> stop cmd
@@ -66,12 +91,13 @@ public class CmdRotateToColor extends CommandBase {
             return;
         }
 
-        if (tableSpinner.getEncoderPosition() - prevStableEncoderVal > Const.kTableSliceRollerDeg * 2) {
-            // We should have past two edges by now, but none registered.
-            // Let's restart sequence
-            initialize();
-            return;
-        }
+        // if (tableSpinner.getEncoderPosition() - prevStableEncoderVal >
+        // Const.kTableSliceRollerDeg * 2) {
+        // // We should have past two edges by now, but none registered.
+        // // Let's restart sequence
+        // initialize();
+        // return;
+        // }
     }
 
     @Override

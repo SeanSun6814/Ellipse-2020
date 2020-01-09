@@ -7,8 +7,11 @@
 
 package frc.robot;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
+
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.subsystems.TableSpinner;
@@ -25,7 +28,7 @@ public class Robot extends TimedRobot {
 
   private RobotContainer m_robotContainer;
 
-  TableSpinner tableSpinner = new TableSpinner();
+  TableSpinner tableSpinner = TableSpinner.getInstance();
   Joystick joy1 = new Joystick(0);
 
   /**
@@ -109,17 +112,27 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
-    // if (joy1.getRawButton(1)) {
-    //   tableSpinner.setSetpoint(30);
-    // }
- 
+    // tableSpinner.motor.set(ControlMode.PercentOutput, joy1.getRawAxis(1) * 0.5);
+    SmartDashboard.putNumber("Power", joy1.getRawAxis(1) * 0.5 * 100);
+
     // if (joy1.getRawButton(2)) {
-    //   tableSpinner.setSetpoint(0);
+    // tableSpinner.setSetpoint(500);
+    // }
+
+    // if (joy1.getRawButton(1)) {
+    // tableSpinner.setSetpoint(0);
     // }
     // if (joy1.getRawButton(3)) {
-    //   tableSpinner.setSetpoint(60);
+    // tableSpinner.setSetpoint(1000);
     // }
-    // SmartDashboard.putNumber("Position", tableSpinner.motor.getSelectedSensorPosition());
+
+    // if (joy1.getRawButton(4)) {
+    // tableSpinner.setSetpoint(10*360);
+    // }
+    SmartDashboard.putNumber("Position", tableSpinner.motor.getSelectedSensorPosition());
+    SmartDashboard.putNumber("Rotations", tableSpinner.motor.getSelectedSensorPosition() / 4096.0 * 360.0);
+    SmartDashboard.putNumber("RPM", tableSpinner.motor.getSelectedSensorVelocity() / 4096.0 * 10);
+    SmartDashboard.putNumber("Raw Vel", tableSpinner.motor.getSelectedSensorVelocity());
   }
 
   @Override

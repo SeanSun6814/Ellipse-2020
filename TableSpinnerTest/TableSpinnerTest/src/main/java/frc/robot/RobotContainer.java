@@ -9,11 +9,12 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
-import frc.robot.commands.ExampleCommand;
-import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.TableSpinner;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.commands.*;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -43,7 +44,14 @@ public class RobotContainer {
    * ({@link edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then
    * passing it to a {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
+  Joystick joy1 = new Joystick(0);
+
   private void configureButtonBindings() {
+    JoystickButton gotoRed = new JoystickButton(joy1, 1);
+    gotoRed.whenPressed(new CmdRotateToColor());
+    JoystickButton gotoRot = new JoystickButton(joy1, 2);
+    gotoRot.whenPressed(new CmdRotateToRotations());
+
   }
 
   /**

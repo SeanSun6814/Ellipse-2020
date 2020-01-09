@@ -23,8 +23,8 @@ public class Const {
     public static final Color kRed = ColorMatch.makeColor(0.561, 0.232, 0.114); // Color(0.5, 0.34, 0.15);
     public static final Color kYellow = ColorMatch.makeColor(0.361, 0.524, 0.113); // Color(0.34, 0.55, 0.11);
 
-    public static final double kEffectiveTableDiameter = 30;
-    public static final double kTableRollerDiameter = 4;
+    public static final double kEffectiveTableDiameter = 29;
+    public static final double kTableRollerDiameter = 3;
     public static final double kTableRot2RollerRot = (Math.PI * kEffectiveTableDiameter)
             / (Math.PI * kTableRollerDiameter);
     public static final double kRollerRot2TableRot = 1 / kTableRot2RollerRot;
