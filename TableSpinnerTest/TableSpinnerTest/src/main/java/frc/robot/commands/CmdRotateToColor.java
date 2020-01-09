@@ -38,7 +38,7 @@ public class CmdRotateToColor extends CommandBase {
         TableColor currentColor = tableSpinner.peekCurrentColor();
         int displacement = getDisplacementToRotate(currentColor, wantedColor);
         direction = getSign(displacement);
-        double degToSpinTable = displacement * 45;
+        double degToSpinTable = displacement * 45 + 22.5; // spin to middle after arrived at color
         degToSpinRoller = degToSpinTable * Const.kTableRot2RollerRot;
 
         tableSpinner.resetInitColorSensor(direction);
