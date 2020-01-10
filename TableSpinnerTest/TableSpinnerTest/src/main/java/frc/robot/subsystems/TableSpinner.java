@@ -22,6 +22,7 @@ public class TableSpinner extends SubsystemBase {
 
     private final DoubleSolenoid piston;
 
+    private int pidIdx = 0;
     public final TalonSRX motor = new TalonSRX(7);
     private final TableColorDetector tableColorDetector = TableColorDetector.getInstance();
 
@@ -33,7 +34,7 @@ public class TableSpinner extends SubsystemBase {
     private TableSpinner() {
         System.out.println("TableSpinner: init");
         piston = new DoubleSolenoid(0, 1);
-        int pidIdx = 0;
+        motor.configFactoryDefault(Const.kTimeout);
         motor.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative);
         motor.setSelectedSensorPosition(0);
         motor.setSensorPhase(true);
@@ -61,11 +62,12 @@ public class TableSpinner extends SubsystemBase {
     }
 
     public void resetEncoder(double resetTo) {
-        System.out.println("Should reset encoder to: " + resetTo * Const.kDeg2Rot * Const.kRot2TalonRaw);
-        ErrorCode errorVal = motor.setSelectedSensorPosition((int) (resetTo * Const.kDeg2Rot * Const.kRot2TalonRaw), 0,
-                Const.kTimeout);
+        int intVal = (int) (resetTo * Const.kDeg2Rot * Const.kRot2TalonRaw);
+        System.out.println("Should reset encoder to: " + intVal);
+        ErrorCode errorVal = motor.setSelectedSensorPosition(intVal, pidIdx, 30);
         System.out.println(errorVal.toString());
         System.out.println("Encoder actually reset to: " + motor.getSelectedSensorPosition());
+
     }
 
     public double getEncoderPosition() {

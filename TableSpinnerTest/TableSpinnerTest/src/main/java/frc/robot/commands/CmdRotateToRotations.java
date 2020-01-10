@@ -14,6 +14,7 @@ public class CmdRotateToRotations extends CommandBase {
 
     private int direction;
     private double degToSpinRoller;
+    private double degToSpinTable;
     private double prevStableEncoderVal;
 
     public CmdRotateToRotations() {
@@ -24,6 +25,7 @@ public class CmdRotateToRotations extends CommandBase {
     public void initialize() {
         isFinished = false;
         prevStableEncoderVal = 0;
+        degToSpinTable = 0;
         System.out.println("CmdRotateToRotation: INFO: starting");
 
         int displacement = 8;
@@ -31,7 +33,7 @@ public class CmdRotateToRotations extends CommandBase {
         System.out.println("CmdRotateToRotation: displacement " + displacement + " edges");
 
         direction = getSign(displacement);
-        double degToSpinTable = displacement * 45 + 15 * direction; // spin to middle after arrived at color
+        degToSpinTable = displacement * 45 + 15 * direction; // spin to middle after arrived at color
         degToSpinRoller = degToSpinTable * Const.kTableRot2RollerRot;
 
         tableSpinner.resetInitColorSensor(direction);
@@ -49,12 +51,9 @@ public class CmdRotateToRotations extends CommandBase {
         if (edgeChanged) {
             double deltaDegreesOnRoller = Const.kTableSliceRollerDeg * direction;
             prevStableEncoderVal += deltaDegreesOnRoller;
-            System.out.println("wrongEncoderVal: "
-                    + tableSpinner.motor.getSelectedSensorPosition() * Const.kTalonRaw2Rot * Const.kRot2Deg);
             System.out.println("prevStableEncoderVal: " + prevStableEncoderVal);
-            tableSpinner.resetEncoder(prevStableEncoderVal);
-            System.out.println("correctedEncoderVal: "
-                    + tableSpinner.motor.getSelectedSensorPosition() * Const.kTalonRaw2Rot * Const.kRot2Deg);
+            double newSetpoint = degToSpinRoller - prevStableEncoderVal;
+            tableSpinner.setSetpoint(newSetpoint);
         }
 
         if (Math.abs(degToSpinRoller - tableSpinner.getEncoderPosition()) < 10

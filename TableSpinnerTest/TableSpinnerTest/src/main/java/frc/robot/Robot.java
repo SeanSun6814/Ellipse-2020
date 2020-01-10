@@ -116,18 +116,21 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("Power", joy1.getRawAxis(1) * 0.5 * 100);
 
     // if (joy1.getRawButton(2)) {
-    // tableSpinner.setSetpoint(500);
+    // tableSpinner.resetEncoder(100.0);
+    // // tableSpinner.setSetpoint(500);
     // }
 
     // if (joy1.getRawButton(1)) {
-    // tableSpinner.setSetpoint(0);
+    // tableSpinner.resetEncoder(1000.0);
+    // // tableSpinner.setSetpoint(0);
     // }
     // if (joy1.getRawButton(3)) {
-    // tableSpinner.setSetpoint(1000);
+    // tableSpinner.resetEncoder(0.0);
+    // // tableSpinner.setSetpoint(1000);
     // }
 
     // if (joy1.getRawButton(4)) {
-    // tableSpinner.setSetpoint(10*360);
+    // // tableSpinner.setSetpoint(10 * 360);
     // }
     SmartDashboard.putNumber("Position", tableSpinner.motor.getSelectedSensorPosition());
     SmartDashboard.putNumber("Rotations", tableSpinner.motor.getSelectedSensorPosition() / 4096.0 * 360.0);
