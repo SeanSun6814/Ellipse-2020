@@ -34,4 +34,7 @@ public class Const {
     public static final double kTableSliceDeg = 45.0;
     public static final double kTableSliceRollerDeg = kTableSliceDeg * kTableRot2RollerRot;
 
+    public static void main(String[] args) {
+        System.out.println(kRollerRot2TableRot);
+    }
 }

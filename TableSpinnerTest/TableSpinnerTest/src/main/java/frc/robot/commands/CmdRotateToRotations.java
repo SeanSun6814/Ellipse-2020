@@ -28,7 +28,7 @@ public class CmdRotateToRotations extends CommandBase {
         degToSpinTable = 0;
         System.out.println("CmdRotateToRotation: INFO: starting");
 
-        int displacement = 8;
+        int displacement = 20;
 
         System.out.println("CmdRotateToRotation: displacement " + displacement + " edges");
 
@@ -52,7 +52,8 @@ public class CmdRotateToRotations extends CommandBase {
             double deltaDegreesOnRoller = Const.kTableSliceRollerDeg * direction;
             prevStableEncoderVal += deltaDegreesOnRoller;
             System.out.println("prevStableEncoderVal: " + prevStableEncoderVal);
-            double newSetpoint = degToSpinRoller - prevStableEncoderVal;
+            System.out.println("ActualWrongEcoderVal: " + tableSpinner.getEncoderPosition());
+            double newSetpoint = degToSpinRoller - prevStableEncoderVal + tableSpinner.getEncoderPosition();
             tableSpinner.setSetpoint(newSetpoint);
         }
 

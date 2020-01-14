@@ -79,7 +79,7 @@ public class TableSpinner extends SubsystemBase {
     }
 
     public void setSetpoint(double setpoint) {
-        // System.out.println("TableSpinner: setSetpoint: " + setpoint + "degs");
+        System.out.println("TableSpinner: setSetpoint: " + setpoint + "degs");
         SmartDashboard.putNumber("Setpoint", setpoint * Const.kDeg2Rot * Const.kRot2TalonRaw);
         motor.set(ControlMode.MotionMagic, setpoint * Const.kDeg2Rot * Const.kRot2TalonRaw);
     }
